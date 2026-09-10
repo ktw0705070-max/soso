@@ -548,6 +548,8 @@ html, body {
   #unicorn-scene {
     height: 74dvh !important;
     width: calc(74dvh * 16 / 9) !important;
+    max-width: none !important;
+    max-height: none !important;
     left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%) !important;
