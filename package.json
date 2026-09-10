@@ -1,0 +1,11 @@
+{
+  "name": "soso",
+  "version": "1.0.0",
+  "description": "The Church of Solvatism",
+  "scripts": {
+    "build:ss": "cd ss && npm install && npm run build",
+    "build:solva": "cd \"solva 복사본 2\" && npm install && npm run build",
+    "build": "npm run build:ss && npm run build:solva && node build.js",
+    "serve": "npx serve dist -p 3456"
+  }
+}

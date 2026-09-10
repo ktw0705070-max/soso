@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Scripture Graph</title>
+    <!-- Add Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+    <!-- 좌측 상단 미니멀 텍스트 범례 (sbau2021 스타일) -->
+    <div id="minimal-legend" class="minimal-legend"></div>
+
+    <!-- 범례 선택 시 나타나는 절 목록 패널 (좌측) -->
+    <div id="verse-list-panel" class="verse-list-panel">
+      <div class="panel-header">
+        <span id="panel-category-title" class="panel-title"></span>
+        <button id="close-verse-panel" class="panel-close-btn">&times;</button>
+      </div>
+      <div id="verse-list-container" class="verse-list-container"></div>
+    </div>
+
+    <!-- 상단 중앙 타이틀 (sbau2021 레퍼런스 스타일) -->
+    <div id="center-header" class="center-header">
+      <div class="header-kr">솔바티즘 경전</div>
+      <div class="header-en">THE SCRIPTURE OF SOLVATISM</div>
+    </div>
+
+    <!-- 우상단 판본 메타 -->
+    <div id="edition-meta" class="edition-meta">
+      <div class="meta-line">SCRIPTURA SOLVATIS</div>
+      <div class="meta-line">제1판</div>
+      <div class="meta-line">전체 347절</div>
+      <div class="meta-line">2027.04.07</div>
+    </div>
+
+    <!-- 상단 몰트교 스타일 네비게이션 바 -->
+    <header class="top-nav-bar">
+      <div class="top-nav-inner">
+        <!-- 얼굴 형상 심볼 -->
+        <a href="../" class="nav-symbol-link" title="The Church of Solvatism">
+          <img src="./src/assets/madn.png" alt="SOLVATISM Symbol" class="nav-symbol-img" />
+        </a>
+        <!-- 메인 홈 세부메뉴 버튼들 -->
+        <nav class="top-menu">
+          <a href="../#home" class="menu-item" id="top-back-home">HOME</a>
+          <a href="javascript:void(0)" class="menu-item active">SCRIPTURE</a>
+          <a href="../#chronicle" class="menu-item">CHRONICLE</a>
+          <a href="../#tenets" class="menu-item">TENETS</a>
+          <a href="../question/" class="menu-item highlight">QUESTION</a>
+        </nav>
+      </div>
+    </header>
+
+    <div id="app"></div>
+
+    <!-- 우측 노드 상세 데이터 패널 -->
+    <div id="right-panel" class="panel">
+      <button id="close-right" class="close-btn">&times;</button>
+      <div id="metadata-content"></div>
+    </div>
+
+    <!-- 좌측 하단 심볼 -->
+    <div id="bottom-left-symbol" class="bottom-left-symbol">
+      <img src="./src/assets/symbol.png" alt="SOLVA Symbol" />
+    </div>
+
+    <!-- 하단 라이트 가이드 텍스트 -->
+    <div class="canvas-guide">
+      Left-click: rotate &nbsp;|&nbsp; Mouse-wheel: zoom &nbsp;|&nbsp; Right-click: pan
+    </div>
+
+    <!-- 로딩 트랜지션 오버레이 -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-content">
+        <img src="/bg_symbol.png" alt="SOLVATISM" class="loading-symbol" />
+        <p class="loading-text">접속 중...</p>
+      </div>
+    </div>
+
+    <style>
+      .loading-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #050505;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+      }
+      .loading-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .loading-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      .loading-symbol {
+        width: 96px;
+        height: 96px;
+        object-fit: contain;
+        opacity: 0.85;
+        animation: loading-spin 2.5s linear infinite;
+      }
+      @keyframes loading-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .loading-text {
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Monaco, monospace;
+        font-size: 11px;
+        letter-spacing: 0.15em;
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0;
+      }
+    </style>
+
+    <script type="module" src="./src/main.js"></script>
+
+    <!-- 네비게이션 스크립트 (로딩 트랜지션 포함) -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loadingOverlay = document.getElementById("loading-overlay");
+
+        function navigateWithLoading(url, e) {
+          if (e) e.preventDefault();
+          loadingOverlay.classList.add("active");
+          setTimeout(function () {
+            window.location.href = url;
+          }, 2000);
+        }
+
+        // HOME 버튼
+        const topBackBtn = document.getElementById("top-back-home");
+        if (topBackBtn) {
+          topBackBtn.addEventListener("click", function (e) {
+            navigateWithLoading("../#home", e);
+          });
+        }
+
+        // 심볼 클릭
+        const symbolLink = document.querySelector(".nav-symbol-link");
+        if (symbolLink) {
+          symbolLink.addEventListener("click", function (e) {
+            navigateWithLoading("../", e);
+          });
+        }
+
+        // 상단 메뉴 버튼들 (href가 외부 링크인 것만)
+        document.querySelectorAll(".top-menu .menu-item").forEach(function (item) {
+          if (item.classList.contains("active")) return; // 현재 페이지(SCRIPTURE)는 스킵
+          const href = item.getAttribute("href");
+          if (!href || href === "javascript:void(0)") return;
+
+          item.addEventListener("click", function (e) {
+            navigateWithLoading(href, e);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

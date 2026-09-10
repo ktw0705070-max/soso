@@ -1,0 +1,19 @@
+{
+  "name": "temp-app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.12"
+  },
+  "dependencies": {
+    "3d-force-graph": "^1.80.0",
+    "d3-force-3d": "^3.0.6",
+    "three-spritetext": "^1.10.0"
+  }
+}

@@ -1,0 +1,516 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Nanum+Gothic:wght@400;700;800&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+@font-face {
+  font-family: 'Mustkill';
+  src: url('./assets/Mustkill.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #050505;
+  color: #ffffff;
+  font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+}
+
+/* Noise overlay — matches main site */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+
+#app {
+  width: 100vw;
+  height: calc(100vh - 50px);
+  position: absolute;
+  top: 50px;
+  left: 0;
+  z-index: 1;
+}
+
+/* ── Minimal Text Legend (sbau2021 style, Top-Left) ── */
+.minimal-legend {
+  position: fixed;
+  top: 76px;
+  left: 28px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Monaco, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  pointer-events: auto;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: color 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.legend-item:hover {
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.legend-item.active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.legend-item.dimmed {
+  opacity: 0.25;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+  transition: transform 0.2s ease;
+}
+
+.legend-item:hover .legend-dot {
+  transform: scale(1.3);
+}
+
+.legend-kr {
+  color: inherit;
+}
+
+.legend-en {
+  color: rgba(255, 255, 255, 0.45);
+  margin-left: 2px;
+}
+
+.legend-item:hover .legend-en,
+.legend-item.active .legend-en {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.legend-count {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 10px;
+}
+
+/* ── Verse List Panel (Left Side when Category Selected) ── */
+.verse-list-panel {
+  position: fixed;
+  top: 76px;
+  left: 360px;
+  width: 290px;
+  max-height: calc(100vh - 80px);
+  z-index: 95;
+  background: rgba(12, 12, 14, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateX(-15px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+.verse-list-panel.open {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.panel-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+
+.panel-close-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.panel-close-btn:hover {
+  color: #ffffff;
+}
+
+.verse-list-container {
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: calc(100vh - 150px);
+}
+
+/* Custom Scrollbar */
+.verse-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+.verse-list-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.verse-list-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.verse-item {
+  padding: 7px 10px;
+  border-radius: 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.verse-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.verse-item.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.verse-num {
+  color: rgba(255, 255, 255, 0.45);
+  margin-right: 6px;
+}
+
+.verse-item:hover .verse-num {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Top Center Header (sbau2021 Reference Style) ── */
+/* ── Top Navigation Bar (Molt Church Style) ── */
+.top-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  z-index: 150;
+  background: rgba(5, 5, 5, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 28px;
+}
+
+.top-nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-symbol-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-symbol-img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(142, 230, 250, 0.5));
+  animation: navSymbolSpin 20s linear infinite;
+  transition: filter 0.25s ease;
+}
+
+.nav-symbol-link:hover .nav-symbol-img {
+  filter: drop-shadow(0 0 16px rgba(142, 230, 250, 0.9));
+}
+
+@keyframes navSymbolSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.top-menu {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-item {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Monaco, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu-item.active {
+  color: #8EE6FA;
+  background: rgba(142, 230, 250, 0.08);
+  border-color: rgba(142, 230, 250, 0.35);
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(142, 230, 250, 0.15);
+}
+
+.menu-item.highlight {
+  color: #00CBCF;
+}
+
+.menu-item.highlight:hover {
+  color: #8EE6FA;
+  border-color: rgba(0, 203, 207, 0.4);
+}
+
+.center-header {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  text-align: center;
+  pointer-events: none;
+  font-family: 'Pretendard', 'Nanum Gothic', 'Inter', -apple-system, sans-serif;
+  user-select: none;
+}
+
+.center-header .header-kr {
+  font-family: 'Nanum Myeongjo', 'Noto Serif KR', serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  -webkit-text-stroke: 0.3px #ffffff;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+  margin-bottom: 2px;
+}
+
+.center-header .header-en {
+  font-family: 'Mustkill', sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Edition Meta (Top-Right) ── */
+.edition-meta {
+  position: fixed;
+  top: 72px;
+  right: 32px;
+  z-index: 100;
+  text-align: right;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Monaco, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.meta-line {
+  white-space: nowrap;
+}
+
+/* ── Bottom-Left Symbol ── */
+.bottom-left-symbol {
+  position: fixed;
+  bottom: 28px;
+  left: 28px;
+  z-index: 100;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-left-symbol img {
+  width: 145px;
+  height: auto;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.15));
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.bottom-left-symbol img:hover {
+  opacity: 1.0;
+  transform: scale(1.06);
+}
+
+/* ── Canvas Guide Text (Bottom Center) ── */
+.canvas-guide {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Right Metadata Panel (Node Detail) ── */
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 360px;
+  height: 100vh;
+  background: rgba(12, 12, 14, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  z-index: 110;
+  padding: 30px;
+  padding-top: 50px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+.panel.open {
+  transform: translateX(0);
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.15s ease;
+}
+
+.close-btn:hover {
+  color: #ffffff;
+}
+
+.metadata-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  margin-top: 10px;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding-bottom: 12px;
+}
+
+.metadata-field {
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.metadata-label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  margin-right: 6px;
+  font-family: monospace;
+}
+
+.publication-link {
+  color: #8EE6FA;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.publication-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Video Overlay ── */
+#video-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#video-overlay.active {
+  display: flex;
+}
+
+#video-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
