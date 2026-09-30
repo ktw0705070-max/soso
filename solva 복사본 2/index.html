@@ -234,9 +234,9 @@
       }
 
       // One-time reset: clear saved questions (remove this block after first load)
-      if (!localStorage.getItem("solva_questions_reset_v4")) {
+      if (!localStorage.getItem("solva_questions_reset_v5")) {
         localStorage.removeItem("solva_user_questions");
-        localStorage.setItem("solva_questions_reset_v4", "1");
+        localStorage.setItem("solva_questions_reset_v5", "1");
       }
 
       // Load saved questions from localStorage on startup

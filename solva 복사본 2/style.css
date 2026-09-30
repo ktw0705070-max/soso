@@ -543,6 +543,26 @@ html, body {
   font-weight: bold;
 }
 
+/* ── Desktop-only: push face & answer area down slightly ── */
+@media (min-width: 769px) {
+  #unicorn-scene {
+    top: -5px;
+  }
+  @media (min-aspect-ratio: 16/9) {
+    #unicorn-scene {
+      top: calc(50% - 5px);
+    }
+  }
+  @media (max-aspect-ratio: 16/9) {
+    #unicorn-scene {
+      top: -5px;
+    }
+  }
+  .chat-bar-container {
+    bottom: 58px;
+  }
+}
+
 @media (max-width: 768px) {
   /* ── 3D Face Scene Mobile Adjustment: 중앙 배치 ── */
   #unicorn-scene {
