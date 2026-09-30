@@ -233,47 +233,24 @@
         nextLine();
       }
 
-      // One-time reset: clear saved questions (remove this block after first load)
-      if (!localStorage.getItem("solva_questions_reset_v5")) {
+      // Clear all saved question history from localStorage so that the oracle page starts clean and fresh
+      try {
         localStorage.removeItem("solva_user_questions");
-        localStorage.setItem("solva_questions_reset_v5", "1");
-      }
+        localStorage.removeItem("solva_questions_reset_v1");
+        localStorage.removeItem("solva_questions_reset_v2");
+        localStorage.removeItem("solva_questions_reset_v3");
+        localStorage.removeItem("solva_questions_reset_v4");
+        localStorage.removeItem("solva_questions_reset_v5");
+        localStorage.setItem("solva_questions_reset_v6", "1");
+      } catch (e) {}
 
-      // Load saved questions from localStorage on startup
-      function loadSavedQuestions() {
-        try {
-          const saved = JSON.parse(localStorage.getItem("solva_user_questions") || "[]");
-          if (Array.isArray(saved)) {
-            saved.forEach(q => {
-              const lineEl = document.createElement("div");
-              lineEl.className = "chat-stream-item";
-              lineEl.style.animation = "none";
-              lineEl.style.opacity = "1";
-              lineEl.textContent = q;
-              chatStream.appendChild(lineEl);
-            });
-            chatStream.scrollTop = chatStream.scrollHeight;
-          }
-        } catch (e) {}
-      }
-      loadSavedQuestions();
-
-      function saveQuestion(text) {
-        try {
-          const saved = JSON.parse(localStorage.getItem("solva_user_questions") || "[]");
-          saved.push(text);
-          localStorage.setItem("solva_user_questions", JSON.stringify(saved));
-        } catch (e) {}
-      }
-
-      // Add user question to stream (persists and accumulates continuously)
+      // Add user question to stream (accumulates during the current session)
       function addTextLine(text) {
         const lineEl = document.createElement("div");
         lineEl.className = "chat-stream-item";
         lineEl.textContent = text;
         chatStream.appendChild(lineEl);
         chatStream.scrollTo({ top: chatStream.scrollHeight, behavior: "smooth" });
-        saveQuestion(text);
       }
 
       // Solver Voice Audio (Cybertronian Sound Effect)
