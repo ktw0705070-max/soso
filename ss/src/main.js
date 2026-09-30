@@ -3,7 +3,7 @@ import ForceGraph3D from '3d-force-graph';
 import * as THREE from 'three';
 import { forceRadial, forceX, forceY, forceZ } from 'd3-force-3d';
 import versesData from '../verses (1).json';
-import symbolAsset from './assets/symbol.png';
+import symbolAsset from './assets/madn.png';
 
 // Set bottom-left symbol via Vite asset import
 document.addEventListener('DOMContentLoaded', () => {
