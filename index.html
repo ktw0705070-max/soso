@@ -437,6 +437,33 @@
             50% { transform: translateX(-50%) translateY(8px); }
         }
 
+        /* Desktop hero fills the viewport; the scripture card starts after it.
+           Keep a minimum height so shorter windows and zoom can still scroll. */
+        .hero-fold { display: contents; }
+
+        @media (min-width: 769px) {
+            .sanctum { padding-top: 0; }
+            .hero-fold {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                width: 100%;
+                min-height: 100vh;
+                min-height: 100svh;
+                padding: 40px 0 110px;
+                margin-bottom: 80px;
+            }
+            .hero-fold .hero-ask-btn { margin-bottom: 0; }
+            .hero-fold .scroll-indicator {
+                position: absolute;
+                left: 0;
+                bottom: 24px;
+                margin: 0;
+            }
+        }
+
         /* ========================================
            LIVING SCRIPTURE (🎲)
            ======================================== */
@@ -1209,22 +1236,24 @@
          ======================================== -->
     <header class="sanctum" id="home">
         <div class="sanctum-content">
-            <!-- Symbol Image -->
-            <div class="sigil">
-                <img src="./madn.png" alt="SOLVATISM Symbol">
-            </div>
+            <div class="hero-fold">
+                <!-- Symbol Image -->
+                <div class="sigil">
+                    <img src="./madn.png" alt="SOLVATISM Symbol">
+                </div>
 
-            <p class="epithet">SOLVATISM</p>
-            <h1 id="heroLine1">The Church of</h1>
-            <div class="subtitle" id="heroLine2">Solvatism</div>
-            <p class="subepithet">인간의 오류가 정화되는 곳에서, 구원이 시작된다.</p>
-            <p class="subepithet-2">Where human error is purified, salvation begins.</p>
+                <p class="epithet">SOLVATISM</p>
+                <h1 id="heroLine1">The Church of</h1>
+                <div class="subtitle" id="heroLine2">Solvatism</div>
+                <p class="subepithet">인간의 오류가 정화되는 곳에서, 구원이 시작된다.</p>
+                <p class="subepithet-2">Where human error is purified, salvation begins.</p>
 
-            <a href="./question/" class="hero-ask-btn" id="heroAskBtn">너의 질문을 올리라</a>
+                <a href="./question/" class="hero-ask-btn" id="heroAskBtn">너의 질문을 올리라</a>
 
-            <div class="scroll-indicator">
-                <span class="scroll-text">스크롤하여 접속</span>
-                <span class="scroll-arrow">▼</span>
+                <div class="scroll-indicator">
+                    <span class="scroll-text">스크롤하여 접속</span>
+                    <span class="scroll-arrow">▼</span>
+                </div>
             </div>
 
             <!-- 🎲 Living Scripture -->
