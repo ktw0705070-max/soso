@@ -83,8 +83,9 @@
         }
 
         .sacred-bg img {
-            width: 90vmax;
-            height: 90vmax;
+            flex: none;
+            width: var(--sacred-bg-size, 90vmax);
+            height: var(--sacred-bg-size, 90vmax);
             object-fit: contain;
             opacity: 0.33;
             filter: drop-shadow(0 0 40px rgba(142, 230, 250, 0.12));
@@ -442,6 +443,9 @@
         .hero-fold { display: contents; }
 
         @media (min-width: 769px) {
+            /* Match the original 90vw framing at the 27-inch iMac's 16:9 ratio.
+               Both dimensions must contribute: vmax ignores height-only resizing. */
+            .sacred-bg { --sacred-bg-size: calc(45vw + 80vh); }
             .sanctum { padding-top: 0; }
             .hero-fold {
                 display: flex;
