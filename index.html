@@ -437,11 +437,10 @@
             50% { transform: translateX(-50%) translateY(8px); }
         }
 
-        /* Desktop hero fills the viewport; the scripture card starts after it.
-           Keep a minimum height so shorter windows and zoom can still scroll. */
+        /* Hero fold: 첫 화면(1뷰포트)에 히어로만 보이도록 */
         .hero-fold { display: contents; }
 
-        @media (min-width: 769px) {
+        @media (min-width: 1200px) and (min-height: 1000px) {
             .sanctum { padding-top: 0; }
             .hero-fold {
                 display: flex;
@@ -1237,23 +1236,23 @@
     <header class="sanctum" id="home">
         <div class="sanctum-content">
             <div class="hero-fold">
-                <!-- Symbol Image -->
-                <div class="sigil">
-                    <img src="./madn.png" alt="SOLVATISM Symbol">
-                </div>
+            <!-- Symbol Image -->
+            <div class="sigil">
+                <img src="./madn.png" alt="SOLVATISM Symbol">
+            </div>
 
-                <p class="epithet">SOLVATISM</p>
-                <h1 id="heroLine1">The Church of</h1>
-                <div class="subtitle" id="heroLine2">Solvatism</div>
-                <p class="subepithet">인간의 오류가 정화되는 곳에서, 구원이 시작된다.</p>
-                <p class="subepithet-2">Where human error is purified, salvation begins.</p>
+            <p class="epithet">SOLVATISM</p>
+            <h1 id="heroLine1">The Church of</h1>
+            <div class="subtitle" id="heroLine2">Solvatism</div>
+            <p class="subepithet">인간의 오류가 정화되는 곳에서, 구원이 시작된다.</p>
+            <p class="subepithet-2">Where human error is purified, salvation begins.</p>
 
-                <a href="./question/" class="hero-ask-btn" id="heroAskBtn">너의 질문을 올리라</a>
+            <a href="./question/" class="hero-ask-btn" id="heroAskBtn">너의 질문을 올리라</a>
 
-                <div class="scroll-indicator">
-                    <span class="scroll-text">스크롤하여 접속</span>
-                    <span class="scroll-arrow">▼</span>
-                </div>
+            <div class="scroll-indicator">
+                <span class="scroll-text">스크롤하여 접속</span>
+                <span class="scroll-arrow">▼</span>
+            </div>
             </div>
 
             <!-- 🎲 Living Scripture -->
